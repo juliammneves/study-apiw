@@ -32,7 +32,7 @@ public class ControllerProduto {
     }
 
     @DeleteMapping
-    public ResponseEntity<String> delete(){
-        return ResponseEntity.status(201).body("Produto deletado: maçã");
+    public ResponseEntity<Void> delete(){
+        return ResponseEntity.status(204).build();
     }
 }

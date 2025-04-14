@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.github.juliammneves.study_apiw.dto.ProdutoRequestCreate;
+import com.github.juliammneves.study_apiw.dto.ProdutoRequestUpdate;
 import com.github.juliammneves.study_apiw.model.Produto;
 import com.github.juliammneves.study_apiw.service.ProdutoService;
 
@@ -24,16 +26,17 @@ public class ControllerProduto {
     private ProdutoService produtoService;
 
     @PostMapping
-    public ResponseEntity<Produto> create(@RequestBody Produto request) {
-        Produto produto = produtoService.save(request);
+    public ResponseEntity<Produto> create(@RequestBody ProdutoRequestCreate dto) {
+        Produto produto = produtoService.save(dto);
 
         return  ResponseEntity.status(201).body(produto);
     }
 
-    @PutMapping
-    public ResponseEntity<Produto> update() {
-        Produto produto = new Produto();
-        return  ResponseEntity.status(200).body(produto);
+    @PutMapping("{id}")
+    public ResponseEntity<Produto> update(@PathVariable Long id, @RequestBody ProdutoRequestUpdate dto) {
+        return produtoService.update(id, dto)
+        .map(ResponseEntity::ok)
+        .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping
@@ -41,7 +44,7 @@ public class ControllerProduto {
         return ResponseEntity.ok(produtoService.findAll());
     }
 
-    @GetMapping()
+    @GetMapping("{id}")
     public ResponseEntity<Produto> findById(@PathVariable Long Id) {
 
         Produto produto = produtoService.findById(Id);

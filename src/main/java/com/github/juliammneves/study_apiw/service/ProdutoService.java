@@ -6,6 +6,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.github.juliammneves.study_apiw.dto.ProdutoRequestCreate;
+import com.github.juliammneves.study_apiw.dto.ProdutoRequestUpdate;
 import com.github.juliammneves.study_apiw.model.Produto;
 import com.github.juliammneves.study_apiw.repository.ProdutoRepository;
 
@@ -15,7 +17,16 @@ public class ProdutoService {
     @Autowired
     private ProdutoRepository produtoRepository;
 
-    public Produto save(Produto produto) {
+    public Optional<Produto> update(Long id, ProdutoRequestUpdate dto) {
+        return produtoRepository.findById(id).map( produto -> {
+            produto.setNome(dto.getNome());
+            return produtoRepository.save(produto);
+        });
+    }
+
+    public Produto save(ProdutoRequestCreate dto) {
+        Produto produto = new Produto();
+        produto.setNome(dto.getNome());
         return produtoRepository.save(produto);
     }
 
